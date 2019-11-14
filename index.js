@@ -123,4 +123,15 @@ app.post("/verify", (req,res) => {
   }
 })
 
+// get pacientes
+
+app.get("/paciente/:id", (req,res) => {
+    console.log("Devolviendo paciente con id: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "select * from paciente where cedula_pac = ?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
 
