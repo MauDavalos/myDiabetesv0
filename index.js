@@ -22,20 +22,6 @@ var mysqlConnection = mysql.createConnection({
 });
 
 
-
-
-/*mysqlConnection.connect((err) => {
-    if (!err)
-        console.log('DB connection succeded.');
-    else
-        console.log('DB connection failed \n Error : ' + JSON.stringify(err, undefined, 2));
-});
-
-
-
-app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000'));*/
-
-
 ///////handle disconnection
 var connection;
 
@@ -61,6 +47,20 @@ connection.connect(function(err) {              // The server is either down
 }
 
 handleDisconnect();
+
+
+mysqlConnection.connect((err) => {
+    if (!err)
+        console.log('DB connection succeded.');
+    else
+        console.log('DB connection failed \n Error : ' + JSON.stringify(err, undefined, 2));
+});
+
+
+
+app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000'));*/
+
+
 
 
 
