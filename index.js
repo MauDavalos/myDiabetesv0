@@ -146,7 +146,7 @@ app.get("/medico/:id", (req,res) => {
 })
 
 app.get("/admin/:id", (req,res) => {
-    console.log("Devolviendo medico con id: " + req.params.id)
+    console.log("Devolviendo admin con id: " + req.params.id)
     const userId = req.params.id
     const queryString = "select * from admin where cedula_adm = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
