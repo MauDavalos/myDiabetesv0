@@ -135,3 +135,23 @@ app.get("/paciente/:id", (req,res) => {
     //res.end()
 })
 
+app.get("/medico/:id", (req,res) => {
+    console.log("Devolviendo medico con id: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "select * from doctor where cedula_doc = ?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
+
+app.get("/admin/:id", (req,res) => {
+    console.log("Devolviendo medico con id: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "select * from admin where cedula_adm = ?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
+
