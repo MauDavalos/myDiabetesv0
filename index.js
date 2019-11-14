@@ -13,13 +13,16 @@ var myUSER = 'bfe2087eee5570'; //|| 'root';
 var myPASSWORD = 'd31eaec8'; //|| '';
 var MYDB = 'heroku_0bc6c32399030a7'; //|| 'mydiabetes';
 
-const mysqlConnection = mysql.createConnection({
+var mysqlConnection = mysql.createConnection({
     host: myHOST,
     user: myUSER,
     password: myPASSWORD,
     database: MYDB,
     multipleStatements: true
 });
+
+
+
 
 mysqlConnection.connect((err) => {
     if (!err)
@@ -33,42 +36,33 @@ mysqlConnection.connect((err) => {
 app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000'));
 
 
+///////handle disconnection
+var connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection(mysqlConnection); // Recreate the connection, since
+                                                  // the old one cannot be reused.
+
+connection.connect(function(err) {              // The server is either down
+    if(err) {                                     // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    }                                     // to avoid a hot loop, and to allow our node script to
+  });  
+
+  connection.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect();                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+  });
+}
+
+handleDisconnect();
 
 
-
-/*app.post("/verify", (req,res) => {
-  	var username = req.body.username;
-    var password = req.body.password;
-    // console.log(username+' '+password)
-	if (username && password) {
-     	mysqlConnection.query('SELECT * FROM admin WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
-			if (rows.length > 0) {
-				req.session.loggedin = true;
-                req.session.username = username;
-                res.send({bool:true , string: " estas loggeado como admin"});
-			} else {
-                //res.send("false")
-                mysqlConnection.query('SELECT * FROM doctor WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
-                    if (rows.length > 0) {
-                        req.session.loggedin = true;
-                        req.session.username = username;
-                        res.send({bool:true , string: " estas loggeado como doctor"});
-            }else{
-                mysqlConnection.query('SELECT * FROM paciente WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
-                    if (rows.length > 0) {
-                        req.session.loggedin = true;
-                        req.session.username = username;
-                        res.send({bool:true , string: " estas loggeado como paciente"});
-
-            }
-           ////end 	
-			res.end();
-		});
-	} else {
-		res.send('Please enter Username and Password!');
-		res.end();
-	}
-})*/
 
 app.post("/verify", (req,res) => {
     var username = req.body.username;
