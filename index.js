@@ -7,11 +7,17 @@ var session = require('express-session');
 app.use(bodyparser.json());
 app.use(session({secret:"mau"}));
 
+var myPORT = process.env.PORT || 3000;
+var myHOST = 'us-cdbr-iron-east-05.cleardb.net' || 'localhost';
+var myUSER = 'bfe2087eee5570' || 'root';
+var myPASSWORD = 'd31eaec8' || '';
+var MYDB = 'heroku_0bc6c32399030a7'|| 'mydiabetes';
+
 const mysqlConnection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'mydiabetes',
+    host: myHOST,
+    user: myUSER,
+    password: myPASSWORD,
+    database: MYDB,
     multipleStatements: true
 });
 
@@ -22,9 +28,9 @@ mysqlConnection.connect((err) => {
         console.log('DB connection failed \n Error : ' + JSON.stringify(err, undefined, 2));
 });
 
-var PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log('Express server is runnig at port no : 3000'));
+
+app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000'));
 
 
 
