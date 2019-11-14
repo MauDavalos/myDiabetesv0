@@ -7,11 +7,11 @@ var session = require('express-session');
 app.use(bodyparser.json());
 app.use(session({secret:"mau"}));
 
-var myPORT = process.env.PORT || 3000;
-var myHOST = 'us-cdbr-iron-east-05.cleardb.net' || 'localhost';
-var myUSER = 'bfe2087eee5570' || 'root';
-var myPASSWORD = 'd31eaec8' || '';
-var MYDB = 'heroku_0bc6c32399030a7'|| 'mydiabetes';
+var myPORT = process.env.PORT; //|| 3000;
+var myHOST = 'us-cdbr-iron-east-05.cleardb.net'; //|| 'localhost';
+var myUSER = 'bfe2087eee5570'; //|| 'root';
+var myPASSWORD = 'd31eaec8'; //|| '';
+var MYDB = 'heroku_0bc6c32399030a7'; //|| 'mydiabetes';
 
 const mysqlConnection = mysql.createConnection({
     host: myHOST,
