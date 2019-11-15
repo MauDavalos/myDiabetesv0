@@ -7,23 +7,25 @@ var session = require('express-session');
 app.use(bodyparser.json());
 app.use(session({secret:"mau"}));
 
-var myPORT = process.env.PORT; //|| 3000;
-var myHOST = 'us-cdbr-iron-east-05.cleardb.net'; //|| 'localhost';
-var myUSER = 'bfe2087eee5570'; //|| 'root';
-var myPASSWORD = 'd31eaec8'; //|| '';
-var MYDB = 'heroku_0bc6c32399030a7'; //|| 'mydiabetes';
+var myPORT = process.env.PORT || 3000; 
 
-var mysqlConnection = mysql.createConnection({
-    host: myHOST,
-    user: myUSER,
-    password: myPASSWORD,
-    database: MYDB,
-    multipleStatements: true
+/*var mysqlConnection = mysql.createConnection({
+    host: 'us-cdbr-iron-east-05.cleardb.net',
+    user: 'bfe2087eee5570',
+    password: 'd31eaec8',
+    database: 'heroku_0bc6c32399030a7'
+});*/
+
+const mysqlConnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'mydiabetes'
 });
 
 
 ///////handle disconnection
-var connection;
+/*var connection;
 
 function handleDisconnect() {
   connection = mysql.createConnection(mysqlConnection); // Recreate the connection, since
@@ -46,10 +48,11 @@ connection.connect(function(err) {              // The server is either down
   });
 }
 
-handleDisconnect();
+handleDisconnect();*/
 
 
-mysqlConnection.connect((err) => {
+mysqlConnection.connect((err) => 
+{
     if (!err)
         console.log('DB connection succeded.');
     else
