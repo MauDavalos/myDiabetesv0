@@ -171,3 +171,13 @@ app.get("/getControles/:id", (req,res) => {
     })
     //res.end()
 })
+
+app.get("/getGlicemia/:id", (req,res) => {
+    console.log("Devolviendo glicemias de control con id: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "SELECT * FROM glicemia WHERE id_control =?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
