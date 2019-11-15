@@ -161,3 +161,13 @@ app.get("/getPacientes/:id", (req,res) => {
     })
     //res.end()
 })
+
+app.get("/getControles/:id", (req,res) => {
+    console.log("Devolviendo controles del paciente con cédula: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "SELECT * FROM control LEFT JOIN paciente ON control.id_pac = paciente.id_pac WHERE paciente.cedula_pac =?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
