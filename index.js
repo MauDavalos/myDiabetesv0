@@ -152,3 +152,12 @@ app.get("/admin/:id", (req,res) => {
     //res.end()
 })
 
+app.get("/getPacientes/:id", (req,res) => {
+    console.log("Devolviendo lista de pacientes de médico con cédula: " + req.params.id)
+    const userId = req.params.id
+    const queryString = "SELECT id_pac, paciente.tipoUsuario, cedula_pac, nombre_pac, apellido_pac, paciente.nombreUsuario, telefono_pac, edad_pac, nivelGlucosa, sexo_pac, paciente.id_doc FROM paciente LEFT JOIN doctor ON paciente.id_doc = doctor.id_doc WHERE doctor.cedula_doc = ?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
