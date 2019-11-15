@@ -181,3 +181,30 @@ app.get("/getGlicemia/:id", (req,res) => {
     })
     //res.end()
 })
+
+app.post("/setGlicemia", (req,res) => {
+    var fecha = req.body.fecha;
+    var nivelGlucosa = req.body.nivelGlucosa;
+    var ayunas= req.body.ayunas;
+    var desayuno= req.body.desayuno;
+    var almuerzo= req.body.almuerzo;
+    var merienda= req.body.merienda;
+    var observaciones = req.body.observaciones;
+    var id_control = req.body.id_control;
+
+     console.log(fecha+' '+nivelGlucosa+' '+id_control)
+	if (fecha && nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
+		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [fecha, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
+            if (err) {
+                throw err;
+            }else{ 
+                
+                res.send(true)
+            } 		
+			res.end();
+		});
+	} else {
+		res.send('Ingrese datos de tabla glicemia!');
+		res.end();
+	}
+})
