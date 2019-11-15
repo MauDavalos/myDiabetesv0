@@ -208,3 +208,29 @@ app.post("/setGlicemia", (req,res) => {
 		res.end();
 	}
 })
+
+app.post("/setMedico", (req,res) => {
+    var nombre = req.body.nombre;
+    var tipoUsuario = req.body.tipoUsuario;
+    var cedula_doc= req.body.cedula_doc;
+    var apellido_doc= req.body.apellido_doc;
+    var nombreUsuario= req.body.nombreUsuario;
+    var password= req.body.password;
+    var telefono_doc = req.body.telefono_doc;
+
+     console.log(nombre+' '+apellido_doc+' '+cedula_doc)
+	if (nombre && tipoUsuario && cedula_doc && apellido_doc && nombreUsuario && password && telefono_doc) { 
+		mysqlConnection.query('INSERT INTO doctor(nombre_doc , tipoUsuario , cedula_doc , apellido_doc , nombreUsuario , password , telefono_doc) VALUES(?,?,?,?,?,?,?)', [nombre, tipoUsuario, cedula_doc, apellido_doc, nombreUsuario, password, telefono_doc], (err, rows, fields) => {
+            if (err) {
+                throw err;
+            }else{ 
+                
+                res.send(true)
+            } 		
+			res.end();
+		});
+	} else {
+		res.send('Ingrese datos de tabla medico!');
+		res.end();
+	}
+})
