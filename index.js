@@ -6,6 +6,7 @@ var session = require('express-session');
 
 app.use(bodyparser.json());
 app.use(session({secret:"mau"}));
+app.use(bodyparser.urlencoded({ extended: true }));
 
 var myPORT = process.env.PORT || 3000; 
 
@@ -132,8 +133,8 @@ app.get("/paciente/:id", (req,res) => {
     //res.end()
 })
 
-app.get("/medico/:id", (req,res) => {
-    console.log("Devolviendo medico con id: " + req.params.id)
+app.get("/docto/:id", (req,res) => {
+    console.log("Devolviendo doctor con id: " + req.params.id)
     const userId = req.params.id
     const queryString = "select * from doctor where cedula_doc = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -209,7 +210,7 @@ app.post("/setGlicemia", (req,res) => {
 	}
 })
 
-app.post("/setMedico", (req,res) => {
+app.post("/setDoctor", (req,res) => {
     var nombre = req.body.nombre;
     var tipoUsuario = req.body.tipoUsuario;
     var cedula_doc= req.body.cedula_doc;
@@ -230,7 +231,39 @@ app.post("/setMedico", (req,res) => {
 			res.end();
 		});
 	} else {
-		res.send('Ingrese datos de tabla medico!');
+		res.send('Ingrese datos de tabla doctor!');
+		res.end();
+	}
+})
+
+app.post("/setPaciente", (req,res) => {
+    var nombre = req.body.nombre;
+    var urgente = req.body.urgente;
+    var tipoUsuario = req.body.tipoUsuario;
+    var cedula_pac= req.body.cedula_pac;
+    var apellido_pac= req.body.apellido_pac;
+    var nombreUsuario= req.body.nombreUsuario;
+    var password= req.body.password;
+    var telefono_pac = req.body.telefono_pac;
+    var edad_pac = req.body.edad_pac;
+    var nivelGlucosa = req.body.nivelGlucosa;
+    var sexo_pac = req.body.sexo_pac;
+    var id_doc = req.body.id_doc;
+
+     console.log(nombre+' '+apellido_pac+' '+cedula_pac)
+	if (nombre&&typeof urgente &&tipoUsuario&&cedula_pac&&apellido_pac&&nombreUsuario&&password&&telefono_pac&&edad_pac&&nivelGlucosa&&sexo_pac&&id_doc) { 
+        mysqlConnection.query('INSERT INTO paciente(nombre_pac , urgente, tipoUsuario , cedula_pac , apellido_pac , nombreUsuario , password , telefono_pac, edad_pac, nivelGlucosa, sexo_pac, id_doc) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', 
+        [nombre,urgente,tipoUsuario, cedula_pac, apellido_pac, nombreUsuario, password, telefono_pac, edad_pac, nivelGlucosa, sexo_pac, id_doc], (err, rows, fields) => {
+            if (err) {
+                throw err;
+            }else{ 
+                
+                res.send(true)
+            } 		
+			res.end();
+		});
+	} else {
+		res.send('Ingrese datos de tabla paciente!');
 		res.end();
 	}
 })
