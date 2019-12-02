@@ -123,7 +123,7 @@ app.post("/verify", (req,res) => {
 
 // get pacientes
 
-app.get("/paciente/:id", (req,res) => {
+app.get("/paciente/:cedula", (req,res) => {
     console.log("Devolviendo paciente con id: " + req.params.id)
     const userId = req.params.id
     const queryString = "select * from paciente where cedula_pac = ?"
@@ -133,7 +133,7 @@ app.get("/paciente/:id", (req,res) => {
     //res.end()
 })
 
-app.get("/docto/:id", (req,res) => {
+app.get("/doctor/:cedula", (req,res) => {
     console.log("Devolviendo doctor con id: " + req.params.id)
     const userId = req.params.id
     const queryString = "select * from doctor where cedula_doc = ?"
@@ -143,7 +143,7 @@ app.get("/docto/:id", (req,res) => {
     //res.end()
 })
 
-app.get("/admin/:id", (req,res) => {
+app.get("/admin/:cedula", (req,res) => {
     console.log("Devolviendo admin con id: " + req.params.id)
     const userId = req.params.id
     const queryString = "select * from admin where cedula_adm = ?"
@@ -153,7 +153,7 @@ app.get("/admin/:id", (req,res) => {
     //res.end()
 })
 
-app.get("/getPacientes/:id", (req,res) => {
+app.get("/getPacientes/:cedula", (req,res) => {
     console.log("Devolviendo lista de pacientes de médico con cédula: " + req.params.id)
     const userId = req.params.id
     const queryString = "SELECT id_pac, paciente.tipoUsuario, cedula_pac, nombre_pac, apellido_pac, paciente.nombreUsuario, telefono_pac, edad_pac, nivelGlucosa, sexo_pac, paciente.id_doc FROM paciente LEFT JOIN doctor ON paciente.id_doc = doctor.id_doc WHERE doctor.cedula_doc = ?"
@@ -163,7 +163,7 @@ app.get("/getPacientes/:id", (req,res) => {
     //res.end()
 })
 
-app.get("/getControles/:id", (req,res) => {
+app.get("/getControles/:cedula", (req,res) => {
     console.log("Devolviendo controles del paciente con cédula: " + req.params.id)
     const userId = req.params.id
     const queryString = "SELECT * FROM control LEFT JOIN paciente ON control.id_pac = paciente.id_pac WHERE paciente.cedula_pac =?"
