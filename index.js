@@ -69,12 +69,12 @@ app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000
 
 
 app.post("/verify", (req,res) => {
-    var username = req.body.username;
+  var cedula = req.body.username;
   var password = req.body.password;
   
   // console.log(username+' '+password)
-  if (username && password) {
-       mysqlConnection.query('SELECT * FROM admin WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
+  if (cedula && password) {
+       mysqlConnection.query('SELECT * FROM admin WHERE cedula_adm = ? AND password = ?', [username, password], (err, rows, fields) => {
           if (rows.length > 0) {
               req.session.loggedin = true;
               req.session.username = username;
@@ -83,7 +83,7 @@ app.post("/verify", (req,res) => {
               
           
           }else{
-            mysqlConnection.query('SELECT * FROM doctor WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
+            mysqlConnection.query('SELECT * FROM doctor WHERE cedula_doc = ? AND password = ?', [username, password], (err, rows, fields) => {
                 if (rows.length > 0) {
                     req.session.loggedin = true;
                     req.session.username = username;
@@ -91,7 +91,7 @@ app.post("/verify", (req,res) => {
                     
               
                 }else{
-                    mysqlConnection.query('SELECT * FROM paciente WHERE nombreUsuario = ? AND password = ?', [username, password], (err, rows, fields) => {
+                    mysqlConnection.query('SELECT * FROM paciente WHERE cedula_pac = ? AND password = ?', [username, password], (err, rows, fields) => {
                         if (rows.length > 0) {
                             req.session.loggedin = true;
                             req.session.username = username;
