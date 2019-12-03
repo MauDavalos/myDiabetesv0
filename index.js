@@ -163,19 +163,19 @@ app.get("/getPacientes/:cedula", (req,res) => {
     //res.end()
 })
 
-app.get("/getControles/:cedula", (req,res) => {
-    console.log("Devolviendo controles del paciente con cédula: " + req.params.id)
-    const userId = req.params.id
-    const queryString = "SELECT * FROM control LEFT JOIN paciente ON control.id_pac = paciente.id_pac WHERE paciente.cedula_pac =?"
+app.get("/getControles/:idPaciente", (req,res) => {
+    console.log("Devolviendo controles del paciente con id: " + req.params.id)
+    const userId = req.params.idPaciente
+    const queryString = "SELECT * FROM control WHERE id_pac =?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
     })
     //res.end()
 })
 
-app.get("/getGlicemia/:id", (req,res) => {
-    console.log("Devolviendo glicemias de control con id: " + req.params.id)
-    const userId = req.params.id
+app.get("/getGlicemia/:idControl", (req,res) => {
+    console.log("Devolviendo glicemias con idControl: " + req.params.id)
+    const userId = req.params.idControl
     const queryString = "SELECT * FROM glicemia WHERE id_control =?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
