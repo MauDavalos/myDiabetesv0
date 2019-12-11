@@ -64,6 +64,10 @@ mysqlConnection.connect((err) =>
 
 app.listen(myPORT, () => console.log('Express server is runnig at port no : 3000'));
 
+var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
 
 
 
@@ -143,6 +147,8 @@ app.get("/doctor/:cedula", (req,res) => {
     //res.end()
 })
 
+
+
 app.get("/admin/:cedula", (req,res) => {
     console.log("Devolviendo admin con id: " + req.params.id)
     const userId = req.params.id
@@ -184,7 +190,7 @@ app.get("/getGlicemia/:idControl", (req,res) => {
 })
 
 app.post("/setGlicemia", (req,res) => {
-    var fecha = req.body.fecha;
+   
     var nivelGlucosa = req.body.nivelGlucosa;
     var ayunas= req.body.ayunas;
     var desayuno= req.body.desayuno;
@@ -193,9 +199,9 @@ app.post("/setGlicemia", (req,res) => {
     var observaciones = req.body.observaciones;
     var id_control = req.body.id_control;
 
-     console.log(fecha+' '+nivelGlucosa+' '+id_control)
-	if (fecha && nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
-		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [fecha, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
+     console.log(nivelGlucosa+' '+id_control)
+	if (nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
+		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [dateTime, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
             if (err) {
                 throw err;
             }else{ 
@@ -209,6 +215,7 @@ app.post("/setGlicemia", (req,res) => {
 		res.end();
 	}
 })
+//modificar fecha setGlicemia
 
 app.post("/setDoctor", (req,res) => {
     var nombre = req.body.nombre;
@@ -267,3 +274,48 @@ app.post("/setPaciente", (req,res) => {
 		res.end();
 	}
 })
+
+app.get("/time", (req, res) => {
+
+ 
+    res.send(dateTime);
+});
+
+app.get("/activarUrgencia", (req, res) => {
+
+    let alerta = activarUrgente(10)
+    res.send({esUrgente: alerta});
+});
+
+app.get("/semaforo", (req, res) => {
+
+    let color = pintarSemaforo(80)
+    res.send({semaforo: color});
+});
+
+function activarUrgente(glucosa){
+
+    if(glucosa<52||glucosa>200)
+        return true;
+        else
+            return false;
+
+  
+    
+  }
+
+  function pintarSemaforo(glucosa){
+
+    let estado;
+    if(glucosa<52||glucosa>200)
+        estado = "rojo";
+        else if(glucosa<70||glucosa>140)
+            estado = "amarillo";
+            else
+                estado = "verde";
+
+
+    return estado;            
+  }
+  
+  
