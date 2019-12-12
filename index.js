@@ -160,8 +160,8 @@ app.get("/admin/:cedula", (req,res) => {
 })
 
 app.get("/getPacientes/:cedula", (req,res) => {
-    console.log("Devolviendo lista de pacientes de médico con cédula: " + req.params.id)
-    const userId = req.params.id
+    console.log("Devolviendo lista de pacientes de médico con cédula: " + req.params.cedula)
+    const userId = req.params.cedula
     const queryString = "SELECT id_pac, paciente.tipoUsuario, cedula_pac, nombre_pac, apellido_pac, urgente, paciente.nombreUsuario, telefono_pac, edad_pac, nivelGlucosa, sexo_pac, paciente.id_doc FROM paciente LEFT JOIN doctor ON paciente.id_doc = doctor.id_doc WHERE doctor.cedula_doc = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
