@@ -128,8 +128,8 @@ app.post("/verify", (req,res) => {
 // get pacientes
 
 app.get("/paciente/:cedula", (req,res) => {
-    console.log("Devolviendo paciente con id: " + req.params.id)
-    const userId = req.params.id
+    console.log("Devolviendo paciente con cedula: " + req.params.cedula)
+    const userId = req.params.cedula
     const queryString = "select * from paciente where cedula_pac = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
@@ -138,8 +138,8 @@ app.get("/paciente/:cedula", (req,res) => {
 })
 
 app.get("/doctor/:cedula", (req,res) => {
-    console.log("Devolviendo doctor con id: " + req.params.id)
-    const userId = req.params.id
+    console.log("Devolviendo doctor con cedula: " + req.params.cedula)
+    const userId = req.params.cedula
     const queryString = "select * from doctor where cedula_doc = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
@@ -150,8 +150,8 @@ app.get("/doctor/:cedula", (req,res) => {
 
 
 app.get("/admin/:cedula", (req,res) => {
-    console.log("Devolviendo admin con id: " + req.params.id)
-    const userId = req.params.id
+    console.log("Devolviendo admin con cedula: " + req.params.cedula)
+    const userId = req.params.cedula
     const queryString = "select * from admin where cedula_adm = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
         res.json(rows)
