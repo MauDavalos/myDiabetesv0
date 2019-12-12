@@ -73,32 +73,32 @@ var today = new Date();
 
 
 app.post("/verify", (req,res) => {
-  var cedula = req.body.username;
+  var cedula = req.body.cedula;
   var password = req.body.password;
   
   // console.log(username+' '+password)
   if (cedula && password) {
-       mysqlConnection.query('SELECT * FROM admin WHERE cedula_adm = ? AND password = ?', [username, password], (err, rows, fields) => {
+       mysqlConnection.query('SELECT * FROM admin WHERE cedula_adm = ? AND password = ?', [cedula, password], (err, rows, fields) => {
           if (rows.length > 0) {
               req.session.loggedin = true;
-              req.session.username = username;
+              req.session.cedula = cedula;
               res.send({bool:true , string: 'admin'});
               res.end();
               
           
           }else{
-            mysqlConnection.query('SELECT * FROM doctor WHERE cedula_doc = ? AND password = ?', [username, password], (err, rows, fields) => {
+            mysqlConnection.query('SELECT * FROM doctor WHERE cedula_doc = ? AND password = ?', [cedula, password], (err, rows, fields) => {
                 if (rows.length > 0) {
                     req.session.loggedin = true;
-                    req.session.username = username;
+                    req.session.cedula = cedula;
                     res.send({bool:true , string: 'doctor'});
                     
               
                 }else{
-                    mysqlConnection.query('SELECT * FROM paciente WHERE cedula_pac = ? AND password = ?', [username, password], (err, rows, fields) => {
+                    mysqlConnection.query('SELECT * FROM paciente WHERE cedula_pac = ? AND password = ?', [cedula, password], (err, rows, fields) => {
                         if (rows.length > 0) {
                             req.session.loggedin = true;
-                            req.session.username = username;
+                            req.session.cedula = cedula;
                             res.send({bool:true , string: 'paciente'});
                             res.end();
                                       
@@ -120,7 +120,7 @@ app.post("/verify", (req,res) => {
       
 
   } else {
-      res.send('Please enter Username and Password!');
+      res.send('Ingresa cedula y password!');
       res.end();
   }
 })
