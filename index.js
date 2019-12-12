@@ -205,8 +205,27 @@ app.post("/setGlicemia", (req,res) => {
             if (err) {
                 throw err;
             }else{ 
+
+                let alerta = activarUrgente(nivelGlucosa);
+                let color = pintarSemaforo(nivelGlucosa);
+
+                /*aqui se deberia obtener el id del paciente para hacer el INSERT
+
+                mysqlConnection.query('INSERT INTO paciente (urgente) VALUES (?)', [alerta], (err, rows, fields) => {
+
+                });*/
+
+                /*aqui se deberia obtener el id del paciente para hacer el INSERT
+
+                mysqlConnection.query('INSERT INTO semaforo (color) VALUES (?)', [alerta], (err, rows, fields) => {
+
+                });*/ 
+
+
                 
-                res.send(true)
+                res.send({bool: true, semaforo: color, urgente:alerta});
+
+
                 
             } 		
 			res.end();
