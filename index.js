@@ -207,6 +207,7 @@ app.post("/setGlicemia", (req,res) => {
             }else{ 
                 
                 res.send(true)
+                
             } 		
 			res.end();
 		});
@@ -257,6 +258,19 @@ app.post("/setPaciente", (req,res) => {
     var sexo_pac = req.body.sexo_pac;
     var id_doc = req.body.id_doc;
 
+    /*mysqlConnection.query('SELECT * FROM paciente WHERE cedula_pac =?', [cedula_pac], (err, rows, fields)=>{
+
+        if (rows.length <= 0) {
+
+            mysqlConnection.query('INSERT INTO control ()')
+
+
+        }
+
+        
+    })*/
+    var IdPac;
+
      console.log(nombre+' '+apellido_pac+' '+cedula_pac)
 	if (nombre&&typeof urgente &&tipoUsuario&&cedula_pac&&apellido_pac&&nombreUsuario&&password&&telefono_pac&&edad_pac&&nivelGlucosa&&sexo_pac&&id_doc) { 
         mysqlConnection.query('INSERT INTO paciente(nombre_pac , urgente, tipoUsuario , cedula_pac , apellido_pac , nombreUsuario , password , telefono_pac, edad_pac, nivelGlucosa, sexo_pac, id_doc) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', 
@@ -264,15 +278,48 @@ app.post("/setPaciente", (req,res) => {
             if (err) {
                 throw err;
             }else{ 
+                idPac = rows.insertId;
+                console.log(rows.insertId);
+                //res.send('usuario creado');
+                //res.end();
                 
-                res.send(true)
+
+                mysqlConnection.query('SELECT * FROM control LEFT JOIN paciente ON paciente.id_pac = control.id_pac WHERE paciente.cedula_pac = ?', [cedula_pac], (err, result, fields)=>{
+
+                    console.log(idPac);
+                    console.log(result.length);
+                    if (result.length < 1) {
+
+                        console.log("no tiene controles");
+            
+                        mysqlConnection.query('INSERT INTO control (id_pac, id_doc, fechaInicio) VALUES(?,?,?)', [idPac,id_doc,date], (err, rows, fields)=> {
+                           
+                                console.log('Se ha creado un nuevo control');
+                                res.send('Usuario y control creado');
+                                res.end();
+                            
+                        });
+            
+            
+                    }else{
+                        console.log("tiene registros de controles");
+                        //res.end();
+                    }
+            
+                    //res.end();
+                });
             } 		
-			res.end();
+            
+			
 		});
 	} else {
 		res.send('Ingrese datos de tabla paciente!');
 		res.end();
-	}
+    }
+
+   
+    
+
 })
 
 app.get("/time", (req, res) => {
@@ -292,6 +339,7 @@ app.get("/semaforo", (req, res) => {
     let color = pintarSemaforo(80)
     res.send({semaforo: color});
 });
+
 
 function activarUrgente(glucosa){
 
