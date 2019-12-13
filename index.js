@@ -223,7 +223,7 @@ app.post("/setGlicemia", (req,res) => {
 
 
                 
-                res.send({bool: true, semaforo: color, urgente:alerta});
+                res.send({bool: true, color: color, esUrgente:alerta});
 
 
                 
