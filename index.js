@@ -82,11 +82,7 @@ app.post("/verify", (req,res) => {
           if (rows.length > 0) {
               req.session.loggedin = true;
               req.session.cedula = cedula;
-<<<<<<< HEAD
               res.send({ loggueado:true , tipoUsuario: 'admin'});
-=======
-              res.send({bool:true , string: 'admin'});
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
               res.end();
               
           
@@ -95,11 +91,7 @@ app.post("/verify", (req,res) => {
                 if (rows.length > 0) {
                     req.session.loggedin = true;
                     req.session.cedula = cedula;
-<<<<<<< HEAD
                     res.send({loggueado:true , tipoUsuario: 'doctor'});
-=======
-                    res.send({bool:true , string: 'doctor'});
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
                     
               
                 }else{
@@ -107,11 +99,7 @@ app.post("/verify", (req,res) => {
                         if (rows.length > 0) {
                             req.session.loggedin = true;
                             req.session.cedula = cedula;
-<<<<<<< HEAD
                             res.send({loggueado:true , tipoUsuario: 'paciente'});
-=======
-                            res.send({bool:true , string: 'paciente'});
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
                             res.end();
                                       
                            
@@ -132,7 +120,7 @@ app.post("/verify", (req,res) => {
       
 
   } else {
-      res.send('Ingresa cedula y password!');
+      res.send('Please enter Username and Password!');
       res.end();
   }
 })
@@ -140,11 +128,7 @@ app.post("/verify", (req,res) => {
 // get pacientes
 
 app.get("/paciente/:cedula", (req,res) => {
-<<<<<<< HEAD
     console.log("Devolviendo paciente con id: " + req.params.cedula)
-=======
-    console.log("Devolviendo paciente con cedula: " + req.params.cedula)
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from paciente where cedula_pac = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -154,11 +138,7 @@ app.get("/paciente/:cedula", (req,res) => {
 })
 
 app.get("/doctor/:cedula", (req,res) => {
-<<<<<<< HEAD
     console.log("Devolviendo doctor con id: " + req.params.cedula)
-=======
-    console.log("Devolviendo doctor con cedula: " + req.params.cedula)
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from doctor where cedula_doc = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -170,11 +150,7 @@ app.get("/doctor/:cedula", (req,res) => {
 
 
 app.get("/admin/:cedula", (req,res) => {
-<<<<<<< HEAD
     console.log("Devolviendo admin con id: " + req.params.cedula)
-=======
-    console.log("Devolviendo admin con cedula: " + req.params.cedula)
->>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from admin where cedula_adm = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -247,11 +223,7 @@ app.post("/setGlicemia", (req,res) => {
 
                 console.log("color"+color)
                 
-<<<<<<< HEAD
-                res.send({bool: true, color: color, esUrgente:alerta});
-=======
                 res.send({bool: true, color: color, urgente:alerta});
->>>>>>> dce7891f2c3d08531b88e72dbbb13be8bf408bf6
 
 
                 
