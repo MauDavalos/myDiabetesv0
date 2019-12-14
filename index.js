@@ -207,6 +207,7 @@ app.post("/setGlicemia", (req,res) => {
             }else{ 
 
                 let alerta = activarUrgente(nivelGlucosa);
+                let color = pintarSemaforo(nivelGlucosa);
                 
                 const queryString = "update paciente inner join control on control.id_pac = paciente.id_pac set paciente.urgente = ? where control.id_control=?";
                 mysqlConnection.query(queryString, [alerta, id_control], (err, rows, fields) => {
@@ -214,15 +215,38 @@ app.post("/setGlicemia", (req,res) => {
                         throw err;
                     }else{ 
                         
-                        res.send(true)
+                        //res.send(true)
+
+                        const queryString = "insert into semaforo (id_pac) SELECT paciente.id_pac from paciente LEFT JOIN control ON control.id_pac = paciente.id_pac WHERE control.id_control = ?";
+                            mysqlConnection.query(queryString, [id_control], (err, rows, fields) => {
+                            if (err) {
+                                throw err;
+                            }else{ 
+                                
+                                        //res.send(true);
+                                        //console.log("se creo un semaforo");
+                                        const queryString = "update semaforo inner join control on control.id_pac = semaforo.id_pac set color = ? where control.id_control=?";
+                                                mysqlConnection.query(queryString, [color, id_control], (err, rows, fields) => {
+                                                if (err) {
+                                                    throw err;
+                                                }else{ 
+                                                    
+                                                    res.send(true);
+                                                    console.log("se creo un semaforo");
+                                                } 		
+                                    
+                                        });
+                            } 		
+                   
+                    });
                     } 		
-                    //res.end();
+                   
                     });
 
 
 
                 
-                let color = pintarSemaforo(nivelGlucosa);
+                
 
                 /*aqui se deberia obtener el id del paciente para hacer el INSERT
 
@@ -239,12 +263,10 @@ app.post("/setGlicemia", (req,res) => {
                 console.log("color"+color)
                 console.log("urgente"+alerta)
                 
-                //res.send({bool: true, color: color, urgente:alerta});
-
-
+                
                 
             } 		    
-			//res.end();
+		
 		});
 	} else {
 		res.send('Ingrese datos de tabla glicemia!');
