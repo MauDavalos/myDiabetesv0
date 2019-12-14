@@ -20,7 +20,7 @@ var myPORT = process.env.PORT || 3000;
 const mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '12345678',
+    password: '',
     database: 'mydiabetes'
 });
 
@@ -198,7 +198,7 @@ app.post("/setGlicemia", (req,res) => {
     var merienda= req.body.merienda;
     var observaciones = req.body.observaciones;
     var id_control = req.body.id_control;
-    var id_paciente = req.body.id_paciente;
+    //var id_paciente = req.body.id_paciente;
      console.log(nivelGlucosa+' '+id_control)
 	if (nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
 		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [dateTime, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
@@ -339,6 +339,89 @@ app.post("/setPaciente", (req,res) => {
    
     
 
+})
+
+app.get("/getTodosPacientes", (req,res) =>{
+    const queryString = "select * from paciente"
+    mysqlConnection.query(queryString, (err, rows, fields) => {
+        res.json(rows)
+    })
+})
+
+app.get("/getTodosDoctores", (req,res) =>{
+    const queryString = "select * from doctor"
+    mysqlConnection.query(queryString, (err, rows, fields) => {
+        res.json(rows)
+    })
+})
+
+app.get("/getListaDosis/:idPaciente", (req,res) => {
+    console.log("Devolviendo lista de dosis del paciente con id: " + req.params.idPaciente)
+    const userId = req.params.idPaciente
+    const queryString = "SELECT * FROM dosis WHERE id_pac =?"
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
+
+app.get("/getDosisActual/:idPaciente", (req,res) => {
+    console.log("Devolviendo dosis actual del paciente con id: " + req.params.idPaciente)
+    const userId = req.params.idPaciente
+    const queryString = "SELECT * FROM dosis WHERE id_pac = ? ORDER BY id_dosis DESC LIMIT 1 "
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        res.json(rows)
+    })
+    //res.end()
+})
+
+app.post("/setDosis", (req,res) => {
+    var nph = req.body.nph;
+    var rapida = req.body.rapida;
+    var id_pac= req.body.id_pac;
+  
+	if (nph && rapida && id_pac) { 
+        
+		mysqlConnection.query('INSERT INTO dosis(nph , rapida , id_pac) VALUES(?,?,?)', [nph, rapida, id_pac], (err, rows, fields) => {
+            if (err) {
+                throw err;
+            }else{ 
+                
+                res.send(true)
+            } 		
+			res.end();
+		});
+	} else {
+		res.send('Ingrese datos de tabla dosis!');
+		res.end();
+	}
+})
+
+app.post("/revisar", (req,res) => {
+    var id_control = req.body.id_control;
+    //var fechaRevision = date;
+    var estadoPaciente= req.body.estadoPaciente;
+    var decision = req.body.decision;
+    var nphActual = req.body.nphActual;
+    var rapidaActual = req.body.rapidaActual;
+    var observaciones = req.body.observaciones;
+  
+	if (id_control  && estadoPaciente&& decision &&nphActual &&rapidaActual&& observaciones) { 
+        
+        const queryString = "UPDATE control SET fechaRevision = ?, estadoPaciente = ?, decision =?, nphActual=?, rapidaActual=?, observaciones =? WHERE id_control=? ";
+        mysqlConnection.query(queryString, [date, estadoPaciente, decision,nphActual,rapidaActual,observaciones, id_control], (err, rows, fields) => {
+            if (err) {
+                throw err;
+            }else{ 
+                
+                res.send(true)
+            } 		
+			res.end();
+		});
+	} else {
+		res.send('Ingrese datos para el update de control!');
+		res.end();
+	}
 })
 
 app.get("/time", (req, res) => {
