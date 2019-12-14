@@ -20,7 +20,7 @@ var myPORT = process.env.PORT || 3000;
 const mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: '12345678',
     database: 'mydiabetes'
 });
 
@@ -76,13 +76,17 @@ app.post("/verify", (req,res) => {
   var cedula = req.body.cedula;
   var password = req.body.password;
   
-  // console.log(username+' '+password)
+  console.log(cedula+' '+password)
   if (cedula && password) {
        mysqlConnection.query('SELECT * FROM admin WHERE cedula_adm = ? AND password = ?', [cedula, password], (err, rows, fields) => {
           if (rows.length > 0) {
               req.session.loggedin = true;
               req.session.cedula = cedula;
+<<<<<<< HEAD
+              res.send({ loggueado:true , tipoUsuario: 'admin'});
+=======
               res.send({bool:true , string: 'admin'});
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
               res.end();
               
           
@@ -91,7 +95,11 @@ app.post("/verify", (req,res) => {
                 if (rows.length > 0) {
                     req.session.loggedin = true;
                     req.session.cedula = cedula;
+<<<<<<< HEAD
+                    res.send({loggueado:true , tipoUsuario: 'doctor'});
+=======
                     res.send({bool:true , string: 'doctor'});
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
                     
               
                 }else{
@@ -99,7 +107,11 @@ app.post("/verify", (req,res) => {
                         if (rows.length > 0) {
                             req.session.loggedin = true;
                             req.session.cedula = cedula;
+<<<<<<< HEAD
+                            res.send({loggueado:true , tipoUsuario: 'paciente'});
+=======
                             res.send({bool:true , string: 'paciente'});
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
                             res.end();
                                       
                            
@@ -128,21 +140,29 @@ app.post("/verify", (req,res) => {
 // get pacientes
 
 app.get("/paciente/:cedula", (req,res) => {
+<<<<<<< HEAD
+    console.log("Devolviendo paciente con id: " + req.params.cedula)
+=======
     console.log("Devolviendo paciente con cedula: " + req.params.cedula)
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from paciente where cedula_pac = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
-        res.json(rows)
+        res.json(rows[0])
     })
     //res.end()
 })
 
 app.get("/doctor/:cedula", (req,res) => {
+<<<<<<< HEAD
+    console.log("Devolviendo doctor con id: " + req.params.cedula)
+=======
     console.log("Devolviendo doctor con cedula: " + req.params.cedula)
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from doctor where cedula_doc = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
-        res.json(rows)
+        res.json(rows[0])
     })
     //res.end()
 })
@@ -150,11 +170,15 @@ app.get("/doctor/:cedula", (req,res) => {
 
 
 app.get("/admin/:cedula", (req,res) => {
+<<<<<<< HEAD
+    console.log("Devolviendo admin con id: " + req.params.cedula)
+=======
     console.log("Devolviendo admin con cedula: " + req.params.cedula)
+>>>>>>> 172e8e7bb64d00eaedd5729051cd767bbee0a9a1
     const userId = req.params.cedula
     const queryString = "select * from admin where cedula_adm = ?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
-        res.json(rows)
+        res.json(rows[0])
     })
     //res.end()
 })
@@ -170,7 +194,7 @@ app.get("/getPacientes/:cedula", (req,res) => {
 })
 
 app.get("/getControles/:idPaciente", (req,res) => {
-    console.log("Devolviendo controles del paciente con id: " + req.params.id)
+    console.log("Devolviendo controles del paciente con id: " + req.params.idPaciente)
     const userId = req.params.idPaciente
     const queryString = "SELECT * FROM control WHERE id_pac =?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -180,7 +204,7 @@ app.get("/getControles/:idPaciente", (req,res) => {
 })
 
 app.get("/getGlicemia/:idControl", (req,res) => {
-    console.log("Devolviendo glicemias con idControl: " + req.params.id)
+    console.log("Devolviendo glicemias con idControl: " + req.params.idControl)
     const userId = req.params.idControl
     const queryString = "SELECT * FROM glicemia WHERE id_control =?"
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
@@ -198,7 +222,7 @@ app.post("/setGlicemia", (req,res) => {
     var merienda= req.body.merienda;
     var observaciones = req.body.observaciones;
     var id_control = req.body.id_control;
-
+    var id_paciente = req.body.id_paciente;
      console.log(nivelGlucosa+' '+id_control)
 	if (nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
 		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [dateTime, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
@@ -221,13 +245,17 @@ app.post("/setGlicemia", (req,res) => {
 
                 });*/ 
 
-
+                console.log("color"+color)
                 
+<<<<<<< HEAD
                 res.send({bool: true, color: color, esUrgente:alerta});
+=======
+                res.send({bool: true, color: color, urgente:alerta});
+>>>>>>> dce7891f2c3d08531b88e72dbbb13be8bf408bf6
 
 
                 
-            } 		
+            } 		    
 			res.end();
 		});
 	} else {
