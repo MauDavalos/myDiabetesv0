@@ -233,7 +233,7 @@ app.post("/setGlicemia", (req,res) => {
                     }else{ 
                     
                         
-                        ////////////////**************** */
+                        /* control automatico */
 
                         let alerta = activarUrgente(nivelGlucosa);
                         let color = pintarSemaforo(nivelGlucosa);
@@ -247,7 +247,7 @@ app.post("/setGlicemia", (req,res) => {
                         //res.send(true)
                         
 
-                        const queryString = "insert into semaforo (color, id_pac) values (?,?)";
+                        const queryString = "insert into semaforo (color, id_pac) values (?,?)"; //actualizar dosis
                             mysqlConnection.query(queryString, [color, id_pac], (err, rows, fields) => {
                             if (err) {
                                 throw err;
@@ -372,8 +372,8 @@ app.post("/setPaciente", (req,res) => {
                         mysqlConnection.query('INSERT INTO control (id_pac, id_doc, fechaInicio) VALUES(?,?,?)', [idPac,id_doc,date], (err, rows, fields)=> {
                            
                                 console.log('Se ha creado un nuevo control');
-                                res.send('Usuario y control creado');
-                                res.end();
+                                //res.send('Usuario y control creado');
+                                //res.end();
                             
                         });
             
@@ -383,7 +383,8 @@ app.post("/setPaciente", (req,res) => {
                         //res.end();
                     }
             
-                    //res.end();
+                    res.send(idPac.toString());
+                    res.end();
                 });
             } 		
             
@@ -428,7 +429,25 @@ app.get("/getDosisActual/:idPaciente", (req,res) => {
     const userId = req.params.idPaciente
     const queryString = "SELECT * FROM dosis WHERE id_pac = ? ORDER BY id_dosis DESC LIMIT 1 "
      mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
-        res.json(rows)
+        res.json(rows[0])
+    })
+    //res.end()
+})
+
+app.get("/getActualSemaforo/:idPaciente", (req,res) => {
+    console.log("Devolviendo semaforo actual del paciente con id: " + req.params.idPaciente)
+    const userId = req.params.idPaciente
+    const queryString = "SELECT * FROM semaforo WHERE id_pac = ? ORDER BY id_semaforo DESC LIMIT 1 "
+     mysqlConnection.query(queryString, [userId], (err, rows, fields) => {
+        if(rows>0){
+            res.json(rows[0])
+
+        }else{
+
+            res.json({color:'',id_pac:''});
+
+        }
+
     })
     //res.end()
 })
@@ -456,13 +475,17 @@ app.post("/setDosis", (req,res) => {
 })
 
 app.post("/revisar", (req,res) => {
+    //para actualizar un control existente
     var id_control = req.body.id_control;
-    //var fechaRevision = date;
     var estadoPaciente= req.body.estadoPaciente;
     var decision = req.body.decision;
     var nphActual = req.body.nphActual;
     var rapidaActual = req.body.rapidaActual;
     var observaciones = req.body.observaciones;
+    ////para crear un nuevo control
+    var id_pac = req.body.id_pac;
+    var id_doc = req.body.id_doc;
+
   
 	if (id_control  && estadoPaciente&& decision &&nphActual &&rapidaActual&& observaciones) { 
         
@@ -472,9 +495,15 @@ app.post("/revisar", (req,res) => {
                 throw err;
             }else{ 
                 
-                res.send(true)
+                mysqlConnection.query('INSERT INTO control (id_pac, id_doc, fechaInicio) VALUES(?,?,?)', [id_pac,id_doc,date], (err, rows, fields)=> {
+                           
+                    console.log('Se ha creado un nuevo control');
+                    res.send('Se ha culminado la revision e iniciado un nuevo control');
+                    res.end();
+                
+            });
             } 		
-			res.end();
+			//res.end();
 		});
 	} else {
 		res.send('Ingrese datos para el update de control!');
