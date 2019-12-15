@@ -197,45 +197,63 @@ app.post("/setGlicemia", (req,res) => {
     var almuerzo= req.body.almuerzo;
     var merienda= req.body.merienda;
     var observaciones = req.body.observaciones;
-    var id_control = req.body.id_control;
-    //var id_paciente = req.body.id_paciente;
-     console.log(nivelGlucosa+' '+id_control)
-	if (nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones && id_control) { 
-		mysqlConnection.query('INSERT INTO glicemia(fecha , nivelGlucosa , ayunas , desayuno, almuerzo, merienda, observaciones, id_control) VALUES(?,?,?,?,?,?,?,?)', [dateTime, nivelGlucosa, ayunas, desayuno, almuerzo, merienda, observaciones, id_control], (err, rows, fields) => {
+    //var id_control = req.body.id_control;
+    var id_pac = req.body.id_pac;
+     //console.log(nivelGlucosa+' '+id_control)
+    //let IDCONTROL=0;
+    /*const query ="select id_control from control where id_pac = ? ORDER BY id_control DESC LIMIT 1";
+     mysqlConnection.query(query, [id_pac], (err, rows, fields) => {
+        if (err) {
+            throw err;
+        }else{
+            console.log("hola");
+        
+            const IDCONTROL = rows[0].id_control;
+            console.log(IDCONTROL);
+
+        }
+    });
+
+        console.log(IDCONTROL);*/
+
+     ///////////////
+	if (nivelGlucosa && typeof ayunas !== 'undefined' && typeof desayuno !== 'undefined' && typeof almuerzo !== 'undefined' && typeof merienda !== 'undefined' && observaciones) { 
+        const query= "INSERT INTO glicemia(id_control) select id_control from control where id_pac = ? ORDER BY id_control DESC LIMIT 1";
+        mysqlConnection.query(query, [id_pac], (err, rows, fields) => {
             if (err) {
                 throw err;
             }else{ 
 
-                let alerta = activarUrgente(nivelGlucosa);
-                let color = pintarSemaforo(nivelGlucosa);
+                idGlicemia = rows.insertId;
+                console.log(idGlicemia);
+                const query= "update glicemia set fecha=?, nivelGlucosa=?,ayunas=?,desayuno=?,almuerzo=?,merienda=?,observaciones=? where id_glicemia=?";
+                mysqlConnection.query(query, [dateTime,nivelGlucosa,ayunas,desayuno,almuerzo,merienda,observaciones,idGlicemia], (err, rows, fields) => {
+                    if (err) {
+                        throw err;
+                    }else{ 
+                    
+                        
+                        ////////////////**************** */
+
+                        let alerta = activarUrgente(nivelGlucosa);
+                        let color = pintarSemaforo(nivelGlucosa);
                 
-                const queryString = "update paciente inner join control on control.id_pac = paciente.id_pac set paciente.urgente = ? where control.id_control=?";
-                mysqlConnection.query(queryString, [alerta, id_control], (err, rows, fields) => {
+                const queryString = "update paciente set urgente = ? where id_pac=?";
+                mysqlConnection.query(queryString, [alerta, id_pac], (err, rows, fields) => {
                     if (err) {
                         throw err;
                     }else{ 
                         
                         //res.send(true)
+                        
 
-                        const queryString = "insert into semaforo (id_pac) SELECT paciente.id_pac from paciente LEFT JOIN control ON control.id_pac = paciente.id_pac WHERE control.id_control = ?";
-                            mysqlConnection.query(queryString, [id_control], (err, rows, fields) => {
+                        const queryString = "insert into semaforo (color, id_pac) values (?,?)";
+                            mysqlConnection.query(queryString, [color, id_pac], (err, rows, fields) => {
                             if (err) {
                                 throw err;
                             }else{ 
                                 
-                                        //res.send(true);
-                                        //console.log("se creo un semaforo");
-                                        const queryString = "update semaforo inner join control on control.id_pac = semaforo.id_pac set color = ? where control.id_control=?";
-                                                mysqlConnection.query(queryString, [color, id_control], (err, rows, fields) => {
-                                                if (err) {
-                                                    throw err;
-                                                }else{ 
-                                                    
-                                                    res.send(true);
-                                                    console.log("se creo un semaforo");
-                                                } 		
-                                    
-                                        });
+                                        res.send(true);
                             } 		
                    
                     });
@@ -262,8 +280,10 @@ app.post("/setGlicemia", (req,res) => {
 
                 console.log("color"+color)
                 console.log("urgente"+alerta)
+                        
+                    } 		    
                 
-                
+                });
                 
             } 		    
 		
