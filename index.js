@@ -253,7 +253,7 @@ app.post("/setGlicemia", (req,res) => {
                                 throw err;
                             }else{ 
                                 
-                                        res.send(true);
+                                res.send({color:color,urgente:alerta})
                             } 		
                    
                     });
