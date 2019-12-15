@@ -238,8 +238,8 @@ app.post("/setGlicemia", (req,res) => {
                         let alerta = activarUrgente(nivelGlucosa);
                         let color = pintarSemaforo(nivelGlucosa);
                 
-                const queryString = "update paciente set urgente = ? where id_pac=?";
-                mysqlConnection.query(queryString, [alerta, id_pac], (err, rows, fields) => {
+                const queryString = "update paciente set urgente = ? , nivelGlucosa=? where id_pac=?";
+                mysqlConnection.query(queryString, [alerta, nivelGlucosa, id_pac], (err, rows, fields) => {
                     if (err) {
                         throw err;
                     }else{ 
@@ -494,14 +494,25 @@ app.post("/revisar", (req,res) => {
             if (err) {
                 throw err;
             }else{ 
-                
-                mysqlConnection.query('INSERT INTO control (id_pac, id_doc, fechaInicio) VALUES(?,?,?)', [id_pac,id_doc,date], (err, rows, fields)=> {
+
+                const query = "insert into dosis (nph, rapida, id_pac) values (?,?,?)"
+                mysqlConnection.query(query, [nphActual, rapidaActual, id_pac], (err, rows, fields) => {
+                    if (err) {
+                        throw err;
+                    }else{ 
+                        mysqlConnection.query('INSERT INTO control (id_pac, id_doc, fechaInicio) VALUES(?,?,?)', [id_pac,id_doc,date], (err, rows, fields)=> {
                            
-                    console.log('Se ha creado un nuevo control');
-                    res.send('Se ha culminado la revision e iniciado un nuevo control');
-                    res.end();
+                            console.log('Se ha creado un nuevo control');
+                            res.send('Se ha culminado la revision e iniciado un nuevo control');
+                            res.end();
+                        
+                    });
+                        
+                    } 		
+                    //res.end();
+                });
                 
-            });
+                
             } 		
 			//res.end();
 		});
