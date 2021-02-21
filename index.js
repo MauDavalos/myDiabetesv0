@@ -18,12 +18,12 @@ var myPORT = process.env.PORT || 3000;
 });*/
 
 const mysqlConnection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'mydiabetes'
+    host: 'us-cdbr-east-03.cleardb.com',
+    user: 'bbfeafca3bfb60',
+    password: '7ced3a87',
+    database: 'heroku_d45bf4a031a074b'
 });
-
+// mysql://bbfeafca3bfb60:7ced3a87@us-cdbr-east-03.cleardb.com/heroku_d45bf4a031a074b?reconnect=true
 
 ///////handle disconnection
 /*var connection;
